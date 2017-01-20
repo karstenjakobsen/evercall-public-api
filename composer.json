@@ -1,0 +1,20 @@
+{
+    "name": "evercall/api-sdk",
+    "description": "evercall public API SDK",
+    "type": "library",
+    "require": {
+	"php": ">=5.6.0",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Evercall\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Karsten Jakobsen",
+            "email": "kj@evercall.dk"
+        }
+    ]
+}
