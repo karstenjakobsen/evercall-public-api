@@ -1,7 +1,7 @@
 <?php
 namespace Evercall;
 
-class Telemeeting extends EvercallPublicAPI {
+class TelemeetingInvitationSMS extends EvercallPublicAPI {
 
 	public $countryCode;
 
@@ -32,25 +32,21 @@ class Telemeeting extends EvercallPublicAPI {
 			"meeting-time" 		=> $meetingTime,
 			"execution-time" 	=> $executionTime
 		);
-
-		return $this;
-
 	}
 
 	public function send() {
 
-		$response = $this->client->post('telemeeting/invitation/sms', [
+		$this->response = $this->client->post($this->baseURL.'/telemeeting/invitation/sms', [
 			'json' => [
 				'invitations' => $this->_payload
-			]
+			],
+			'http_errors' => false
 		]);
 
-		// Set response
-		$this->responseBody = json_decode($response->getBody(), true);
+	}
 
-		if($response->getStatusCode() == 200)
-			$this->success = true;
-
+	public function success() {
+		return $this->response->getStatusCode() == 200 ? true : false;
 	}
 
 }
