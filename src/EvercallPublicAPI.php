@@ -21,6 +21,10 @@ abstract class EvercallPublicAPI {
 		return json_decode($response['responseBody'],true);
 	}
 
+	public function getResponse() {
+		return $this->client->getResponse();
+	}
+
 	/**
 	 * EvercallPublicAPI constructor.
 	 * @desc Setup client

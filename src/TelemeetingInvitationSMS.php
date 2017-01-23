@@ -3,34 +3,15 @@ namespace Evercall;
 
 class TelemeetingInvitationSMS extends EvercallPublicAPI {
 
-	public $countryCode;
-
-	public $phoneNumber;
-
-	public $sender;
-
-	public $meetingPin;
-
-	public $meetingTime;
-
-	public $executionTime;
-
 	public function addInvitationSMS( $countryCode, $phoneNumber, $sender, $meetingPin, $meetingTime, $executionTime ) {
 
-		$this->countryCode 		= $countryCode;
-		$this->phoneNumber 		= $phoneNumber;
-		$this->sender 			= $sender;
-		$this->meetingPin 		= $meetingPin;
-		$this->meetingTime 		= $meetingTime;
-		$this->executionTime 	= $executionTime;
-
 		$this->_payload[] = array(
-			"country-code" 		=> $countryCode,
-			"phone-number" 		=> $phoneNumber,
+			"countryCode" 		=> $countryCode,
+			"phoneNumber" 		=> $phoneNumber,
 			"sender" 			=> $sender,
-			"meeting-pin" 		=> $meetingPin,
-			"meeting-time" 		=> $meetingTime,
-			"execution-time" 	=> $executionTime
+			"meetingPin" 		=> $meetingPin,
+			"meetingTime" 		=> $meetingTime,
+			"executionTime" 	=> $executionTime
 		);
 	}
 
