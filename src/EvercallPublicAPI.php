@@ -12,7 +12,7 @@ abstract class EvercallPublicAPI {
 
 	protected $response;
 
-	protected $_payload;
+	protected $payload;
 
 	protected $success = false;
 
@@ -23,6 +23,10 @@ abstract class EvercallPublicAPI {
 
 	public function getResponse() {
 		return $this->client->getResponse();
+	}
+
+	public function getPayload() {
+		return $this->payload;
 	}
 
 	/**

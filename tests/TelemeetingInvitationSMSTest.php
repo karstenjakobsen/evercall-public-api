@@ -55,4 +55,37 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->assertEquals(true, is_array($invitation->getResponseBody()));
 	}
 
+	public function test_should_haveValidDateInBody_when_executionTimeIsNegativeInteger() {
+
+		$this->setClientResponse(200);
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', -600);
+		$payload = $invitation->getPayload();
+
+		$this->assertEquals(true, is_int(strtotime($payload[0]["executionTime"])));
+	}
+
+	public function test_should_haveValidDateInBody_when_executionTimeIsDate() {
+
+		$this->setClientResponse(200);
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', '2016-02-01');
+		$payload = $invitation->getPayload();
+
+		$this->assertEquals(true, is_int(strtotime($payload[0]["executionTime"])));
+	}
+
+	public function test_should_haveValidDateInBody_when_meetingTimeIsDate() {
+
+		$this->setClientResponse(200);
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', '2016-02-01');
+		$payload = $invitation->getPayload();
+
+		$this->assertEquals(true, is_int(strtotime($payload[0]["meetingTime"])));
+	}
+
 }
