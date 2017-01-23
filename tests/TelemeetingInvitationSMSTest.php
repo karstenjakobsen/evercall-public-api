@@ -55,6 +55,26 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->assertEquals(true, is_array($invitation->getResponseBody()));
 	}
 
+	public function test_should_haveMultiplePayloads_when_addingMultiplePhones() {
+
+		$this->setClientResponse(200, '{"body":"test"}');
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
+
+		$this->assertEquals(2, count($invitation->getPayload()));
+	}
+
+	public function test_should_haveSinglePayload_when_addingOnePhone() {
+
+		$this->setClientResponse(200, '{"body":"test"}');
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,1234,1,2,3,4);
+
+		$this->assertEquals(1, count($invitation->getPayload()));
+	}
+
 	public function test_should_haveValidDateInBody_when_executionTimeIsNegativeInteger() {
 
 		$this->setClientResponse(200);

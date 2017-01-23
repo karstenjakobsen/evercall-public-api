@@ -32,16 +32,53 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 		return date('c', strtotime($meetingTime));
 	}
 
+	/**
+	 * @param array $countryCode
+	 * @param array $phoneNumber
+	 * @param $sender
+	 * @param $meetingPin
+	 * @param $meetingTime
+	 * @param $executionTime
+	 */
+	private function addMultiple( array $countryCode, array $phoneNumber, $sender, $meetingPin, $meetingTime, $executionTime ) {
+
+		foreach ( $countryCode as $key => $value ):
+
+			$this->payload[] = array(
+				"countryCode" 		=> $value,
+				"phoneNumber" 		=> $phoneNumber[$key],
+				"sender" 			=> $sender,
+				"meetingPin" 		=> $meetingPin,
+				"meetingTime" 		=> $this->formatMeetingTime($meetingTime),
+				"executionTime" 	=> $this->formatExecutionTime($executionTime)
+			);
+
+		endforeach;;
+	}
+
+	/**
+	 * @param $countryCode
+	 * @param $phoneNumber
+	 * @param $sender
+	 * @param $meetingPin
+	 * @param $meetingTime
+	 * @param $executionTime
+	 */
 	public function addInvitationSMS( $countryCode, $phoneNumber, $sender, $meetingPin, $meetingTime, $executionTime ) {
 
-		$this->payload[] = array(
-			"countryCode" 		=> $countryCode,
-			"phoneNumber" 		=> $phoneNumber,
-			"sender" 			=> $sender,
-			"meetingPin" 		=> $meetingPin,
-			"meetingTime" 		=> $this->formatMeetingTime($meetingTime),
-			"executionTime" 	=> $this->formatExecutionTime($executionTime)
-		);
+		// Check if array. Create multiple
+		if(is_array($countryCode) && is_array($countryCode) && count($countryCode) == count($phoneNumber) ):
+			$this->addMultiple( $countryCode, $phoneNumber, $sender, $meetingPin, $meetingTime, $executionTime );
+		else:
+			$this->payload[] = array(
+				"countryCode" 		=> $countryCode,
+				"phoneNumber" 		=> $phoneNumber,
+				"sender" 			=> $sender,
+				"meetingPin" 		=> $meetingPin,
+				"meetingTime" 		=> $this->formatMeetingTime($meetingTime),
+				"executionTime" 	=> $this->formatExecutionTime($executionTime)
+			);
+		endif;
 	}
 
 	public function send() {
