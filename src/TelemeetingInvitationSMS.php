@@ -3,6 +3,13 @@ namespace Evercall;
 
 class TelemeetingInvitationSMS extends EvercallPublicAPI {
 
+	public function __construct(SimpleJsonHttp $client)
+	{
+		parent::__construct($client);
+
+		$this->client->setUrl('https://rest-api.evertest.dk/granada/v1');
+	}
+
 	/**
 	 * @param $executionTime
 	 * @return false|string
@@ -10,7 +17,7 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 	private function formatExecutionTime($executionTime) {
 
 		// If $executionTime is a negative integer then calculate
-		if( is_int($executionTime) && $executionTime < 0 ):
+		if( is_numeric($executionTime) && $executionTime < 0 ):
 			return date('c', strtotime(("{$executionTime} seconds")));
 		else:
 			return date('c', strtotime($executionTime));

@@ -29,27 +29,27 @@ class SimpleJsonHttp {
 
 	private $error = false;
 
-	public function __construct( $userAgent, $url ) {
-
-		// Set Uri options 18443
+	public function __construct( $userAgent, $url = null ) {
 		$this->userAgent 	= $userAgent;
 		$this->url 			= $url;
-
 	}
 
 	/**
-	 * @param string $url
+	 * @param $url
+	 * @return $this
 	 */
 	public function setUrl( $url ) {
 		$this->url = $url;
+		return $this;
 	}
 
 	/**
-	 * @param string $suffix
+	 * @param $suffix
+	 * @return $this
 	 */
-	public function setSuffix($suffix)
-	{
+	public function setSuffix($suffix)	{
 		$this->suffix = $suffix;
+		return $this;
 	}
 
 	/**
