@@ -1,23 +1,15 @@
 <?php
 namespace Evercall;
 
-use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
-
 abstract class EvercallPublicAPI {
 
-	protected $baseURL = 'https://rest-api.evertest.dk/granada/v1';
-
 	/**
-	 * @var Client
+	 * @var SimpleJsonHttp
 	 */
 	protected $client;
 
 	protected $responseBody;
 
-	/**
-	 * @var ResponseInterface
-	 */
 	protected $response;
 
 	protected $_payload;
@@ -25,15 +17,16 @@ abstract class EvercallPublicAPI {
 	protected $success = false;
 
 	public function getResponseBody() {
-		return json_decode($this->response->getBody(),true);
+		$response = $this->client->getResponse();
+		return json_decode($response['responseBody'],true);
 	}
 
 	/**
 	 * EvercallPublicAPI constructor.
 	 * @desc Setup client
-	 * @param $client Client
+	 * @param $client SimpleJsonHttp
 	 */
-	public function __construct( Client $client ) {
+	public function __construct( SimpleJsonHttp $client ) {
 		$this->client = $client;
 	}
 

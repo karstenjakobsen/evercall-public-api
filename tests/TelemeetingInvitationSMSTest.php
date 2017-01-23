@@ -1,11 +1,6 @@
 <?php
 namespace Evercall;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-
 class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 
 	protected $client;
@@ -15,21 +10,24 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		parent::setUp();
 	}
 
-	private function setClient($statusCode, array $headers, $body = null) {
+	private function setClientResponse($statusCode, $body = null) {
 
 		// Create a mock and queue two responses.
-		$mock = new MockHandler([
-			new Response($statusCode, $headers, $body)
-		]);
+		$this->client = $this->createMock('Evercall\SimpleJsonHttp');
 
-		$handler = HandlerStack::create($mock);
-		$this->client = new Client(['handler' => $handler]);
+		// Configure the stub.
+		$this->client->method('getStatusCode')
+			->willReturn($statusCode);
+
+		// Configure the stub.
+		$this->client->method('getResponse')
+			->willReturn(array('responseBody' => $body));
 
 	}
 
 	public function test_should_returnSuccess_when_returnCodeIs200() {
 
-		$this->setClient(200, []);
+		$this->setClientResponse(200);
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
 		$invitation->send();
@@ -39,7 +37,7 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 
 	public function test_should_returnError_when_returnCodeIs400() {
 
-		$this->setClient(400, []);
+		$this->setClientResponse(400);
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
 		$invitation->send();
@@ -49,7 +47,7 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 
 	public function test_should_returnArrayBody_when_responseContainsJSON() {
 
-		$this->setClient(200, [], '{"body":"test"}');
+		$this->setClientResponse(200, '{"body":"test"}');
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
 		$invitation->send();

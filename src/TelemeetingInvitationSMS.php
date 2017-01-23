@@ -36,17 +36,15 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 
 	public function send() {
 
-		$this->response = $this->client->post($this->baseURL.'/telemeeting/invitation/sms', [
-			'json' => [
-				'invitations' => $this->_payload
-			],
-			'http_errors' => false
-		]);
+		$this->client->setSuffix('/telemeeting/invitation/sms');
+
+		$body = array( 'invitations' => $this->_payload );
+		$this->client->post(json_encode($body));
 
 	}
 
 	public function success() {
-		return $this->response->getStatusCode() == 200 ? true : false;
+		return $this->client->getStatusCode() == 200 ? true : false;
 	}
 
 }
