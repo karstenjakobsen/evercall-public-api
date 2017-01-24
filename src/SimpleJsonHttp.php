@@ -29,9 +29,21 @@ class SimpleJsonHttp {
 
 	private $error = false;
 
-	public function __construct( $userAgent, $url = null ) {
+	/**
+	 * @var bool If running in sandbox mode then dont send request
+	 */
+	private $sandbox = false;
+
+	/**
+	 * SimpleJsonHttp constructor.
+	 * @param $userAgent
+	 * @param null $url
+	 * @param bool $sandbox
+	 */
+	public function __construct( $userAgent, $url = null, $sandbox = false ) {
 		$this->userAgent 	= $userAgent;
 		$this->url 			= $url;
+		$this->sandbox		= $sandbox;
 	}
 
 	/**
@@ -240,7 +252,7 @@ class SimpleJsonHttp {
 		return $this->doRequest('PATCH', $body);
 	}
 
-	private function doRequest( $type, $body ) {
+	private function doRequest( $type, $body = null ) {
 
 		$this->_instantiateCurl();
 
@@ -263,9 +275,11 @@ class SimpleJsonHttp {
 
 		curl_setopt_array( $this->curl, $this->curlOptions );
 
-		$this->responseBody = curl_exec( $this->curl );
-
-		$this->setCURLError();
+		// Check if running in sandbox mode
+		if( $this->sandbox === false ):
+			$this->responseBody = curl_exec( $this->curl );
+			$this->setCURLError();
+		endif;
 
 		return $this->getResponse();
 
