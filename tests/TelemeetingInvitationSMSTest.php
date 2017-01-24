@@ -58,7 +58,7 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 	public function test_should_returnResponse_when_runningInSandboxMode() {
 
 		$invitation = new TelemeetingInvitationSMS(new SimpleJsonHttp('Kalle', null, true));
-		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,'2016-01-01', 9200);
 		$invitation->send();
 
 		$this->assertEquals(true, is_array($invitation->getResponse()));
@@ -67,7 +67,7 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 	public function test_should_returnMethod_when_runningInSandboxMode() {
 
 		$invitation = new TelemeetingInvitationSMS(new SimpleJsonHttp('Kalle', null, true));
-		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,'2016-01-01', 9200);
 		$invitation->send();
 
 		$this->assertArrayHasKey('method',$invitation->getResponse());
@@ -78,8 +78,8 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->setClientResponse(200, '{"body":"test"}');
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
-		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
-		$invitation->addInvitationSMS(array('45','46'), array('5151','4141'),1,2,3,4);
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,'2016-01-01', 9200);
+		$invitation->addInvitationSMS(array('45','46'), array('5151','4141'),1,2,'2016-01-01', 9200);
 
 		$payload = $invitation->getBody();
 		$this->assertEquals(4, count($payload['invitations']));
@@ -90,32 +90,32 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->setClientResponse(200, '{"body":"test"}');
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
-		$invitation->addInvitationSMS(45,1234,1,2,3,4);
+		$invitation->addInvitationSMS(45,1234,1,2,'2016-01-01', 9200);
 
 		$payload = $invitation->getBody();
 		$this->assertEquals(1, count($payload['invitations']));
 	}
 
-	public function test_should_haveValidDateInBody_when_executionTimeIsNegativeInteger() {
+	public function test_should_haveValidDateInBody_when_executionTimeIsAnInteger() {
 
 		$this->setClientResponse(200);
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
-		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', -600);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', 9200);
 		$payload = $invitation->getBody();
 
 		$this->assertEquals(true, is_int(strtotime($payload['invitations'][0]["executionTime"])));
 	}
 
-	public function test_should_haveValidDateInBody_when_executionTimeIsNegativeStringInteger() {
+	public function test_should_haveValidDateInBody_when_executionTimeIsAnStringInteger() {
 
 		$this->setClientResponse(200);
 
 		$invitation = new TelemeetingInvitationSMS($this->client);
-		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', "-600");
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', 3600);
 		$payload = $invitation->getBody();
 
-		$this->assertEquals(true, is_int(strtotime($payload['invitations'][0]["executionTime"])));
+		$this->assertEquals(1, count($payload['invitations']));
 	}
 
 	public function test_should_haveValidDateInBody_when_executionTimeIsDate() {
@@ -127,17 +127,6 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$payload = $invitation->getBody();
 
 		$this->assertEquals(true, is_int(strtotime($payload['invitations'][0]["executionTime"])));
-	}
-
-	public function test_should_haveValidDateInBody_when_meetingTimeIsDate() {
-
-		$this->setClientResponse(200);
-
-		$invitation = new TelemeetingInvitationSMS($this->client);
-		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', '2016-02-01');
-		$payload = $invitation->getBody();
-
-		$this->assertEquals(true, is_int(strtotime($payload['invitations'][0]["meetingTime"])));
 	}
 
 }
