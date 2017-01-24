@@ -7,7 +7,7 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 	{
 		parent::__construct($client);
 
-		$this->client->setUrl('https://rest-api.evertest.dk/granada/v1');
+		$this->client->setUrl('https://rest-api.evertest.dk/granada/v1/telemeeting/invitation/sms');
 	}
 
 	/**
@@ -44,7 +44,7 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 
 		foreach ( $countryCode as $key => $value ):
 
-			$this->payload[] = array(
+			$this->_payload[] = array(
 				"countryCode" 		=> $value,
 				"phoneNumber" 		=> $phoneNumber[$key],
 				"sender" 			=> $sender,
@@ -53,7 +53,9 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 				"executionTime" 	=> $this->formatExecutionTime($executionTime)
 			);
 
-		endforeach;;
+		endforeach;
+
+		$this->body = array( 'invitations' => $this->_payload );
 	}
 
 	/**
@@ -70,7 +72,7 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 		if(is_array($countryCode) && is_array($countryCode) && count($countryCode) == count($phoneNumber) ):
 			$this->addMultiple( $countryCode, $phoneNumber, $sender, $meetingPin, $meetingTime, $executionTime );
 		else:
-			$this->payload[] = array(
+			$this->_payload[] = array(
 				"countryCode" 		=> $countryCode,
 				"phoneNumber" 		=> $phoneNumber,
 				"sender" 			=> $sender,
@@ -79,15 +81,12 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 				"executionTime" 	=> $this->formatExecutionTime($executionTime)
 			);
 		endif;
+
+		$this->body = array( 'invitations' => $this->_payload );
 	}
 
 	public function send() {
-
-		$this->client->setSuffix('/telemeeting/invitation/sms');
-
-		$body = array( 'invitations' => $this->payload );
-		$this->client->post(json_encode($body));
-
+		$this->client->post(json_encode($this->body));
 	}
 
 	public function success() {
