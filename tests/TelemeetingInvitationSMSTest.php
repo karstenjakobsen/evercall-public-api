@@ -55,6 +55,24 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->assertEquals(true, is_array($invitation->getResponseBody()));
 	}
 
+	public function test_should_returnResponse_when_runningInSandboxMode() {
+
+		$invitation = new TelemeetingInvitationSMS(new SimpleJsonHttp('Kalle', null, true));
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
+		$invitation->send();
+
+		$this->assertEquals(true, is_array($invitation->getResponse()));
+	}
+
+	public function test_should_returnMethod_when_runningInSandboxMode() {
+
+		$invitation = new TelemeetingInvitationSMS(new SimpleJsonHttp('Kalle', null, true));
+		$invitation->addInvitationSMS(array('45','46'), array('3171','2929'),1,2,3,4);
+		$invitation->send();
+
+		$this->assertArrayHasKey('method',$invitation->getResponse());
+	}
+
 	public function test_should_haveMultiplePayloads_when_addingMultiplePhones() {
 
 		$this->setClientResponse(200, '{"body":"test"}');
