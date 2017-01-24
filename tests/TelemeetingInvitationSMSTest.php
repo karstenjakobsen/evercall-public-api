@@ -52,7 +52,7 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$invitation = new TelemeetingInvitationSMS($this->client);
 		$invitation->send();
 
-		$this->assertEquals(true, is_array($invitation->getResponseBody()));
+		$this->assertEquals(true, is_array(json_decode($invitation->getResponseBody(),true)));
 	}
 
 	public function test_should_returnResponse_when_runningInSandboxMode() {

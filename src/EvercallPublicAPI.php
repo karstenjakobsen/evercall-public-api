@@ -47,9 +47,13 @@ abstract class EvercallPublicAPI {
 
 	}
 
-	public function getResponseBody() {
+	/**
+	 * @param bool $pretty
+	 * @return string
+	 */
+	public function getResponseBody( $pretty = false) {
 		$response = $this->client->getResponse();
-		return json_decode($response['responseBody'],true);
+		return ($pretty) ? json_encode(json_decode($response['responseBody'],true), JSON_PRETTY_PRINT ) : $response['responseBody'];
 	}
 
 	public function getResponse() {
