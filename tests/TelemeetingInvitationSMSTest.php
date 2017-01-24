@@ -129,4 +129,28 @@ class TelemeetingInvitationSMSTest extends \PHPUnit_Framework_TestCase  {
 		$this->assertEquals(true, is_int(strtotime($payload['invitations'][0]["executionTime"])));
 	}
 
+	/**
+	 * @expectedException \Exception
+	 */
+	public function test_should_throwException_when_environmentIsInvalid() {
+
+		$this->setClientResponse(200);
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', '2016-02-01');
+		$invitation->setEnv('test','haha');
+	}
+
+	/**
+	 * @expectedException \Exception
+	 */
+	public function test_should_throwException_when_VersionIsInvalid() {
+
+		$this->setClientResponse(200);
+
+		$invitation = new TelemeetingInvitationSMS($this->client);
+		$invitation->addInvitationSMS(45,31712929,'kalle','12345678','2016-01-01', '2016-02-01');
+		$invitation->setEnv(EvercallPublicAPI::ENV_DEV,'zzzz');
+	}
+
 }

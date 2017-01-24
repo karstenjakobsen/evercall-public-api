@@ -7,7 +7,8 @@ class TelemeetingInvitationSMS extends EvercallPublicAPI {
 	{
 		parent::__construct($client);
 
-		$this->client->setUrl('https://rest-api.evertest.dk/granada/v1/telemeeting/invitation/sms');
+		$this->client->setSuffix('telemeeting/invitation/sms');
+
 	}
 
 	/**
